@@ -4,6 +4,7 @@ var app = {};
 app.init = () => {
   $('.username').on('click', app.handleUsernameClick);
   $('#send .submit').on('submit', app.handleSubmit);
+  console.log('things');
 };
 
 app.send = (message) => {
@@ -48,8 +49,9 @@ app.handleUsernameClick = () => {
 
 };
 
-app.handleSubmit = () => {
+app.handleSubmit = (message) => {
 
 };
+
 
 // $('.username').on('click', app.handleUsernameClick);

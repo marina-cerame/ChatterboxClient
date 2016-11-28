@@ -21,13 +21,18 @@
       }
     </script>
     <!-- your scripts -->
-    <script src="env/config.js"></script>
+    <script src="/Users/marinacerame/documents/gitimmersion/opspark/sprints/ChatterboxClient/client/env/config.example.js"></script>
     <script src="scripts/app.js"></script>
   </head>
   <body>
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
+      <form id='send' method='post'>
+        <b>Message:</b>
+        <input type='text' name='message' />
+        <input type = 'submit'  value='Submit'/>
+      </form>
     </div>
     <div id="chats"></div>
   </body>
