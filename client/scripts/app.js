@@ -1,10 +1,18 @@
 // YOUR CODE HERE:
+$(document).ready(function () {
+  app.init();
+});
+
 var app = {};
 
+app.username = window.location.search.split('=')[1];
+
 app.init = () => {
+  console.log('init called');
   $('.username').on('click', app.handleUsernameClick);
   $('#send .submit').on('submit', app.handleSubmit);
 };
+
 
 app.send = (message) => {
   $.ajax({
@@ -44,11 +52,9 @@ app.renderRoom = (room) => {
 };
 
 app.handleUsernameClick = () => {
-
+  console.log('hi');
 };
 
 app.handleSubmit = () => {
 
 };
-
-// $('.username').on('click', app.handleUsernameClick);
