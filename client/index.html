@@ -7,6 +7,7 @@
 
     <!-- dependencies -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="/Users/marinacerame/documents/gitimmersion/opspark/sprints/ChatterboxClient/client/bower_components/underscore/underscore.js"></script>
     <script>
       // YOU DO NOT NEED TO EDIT THIS CODE
       if (!/(&|\?)username=/.test(window.location.search)) {
@@ -17,9 +18,10 @@
         newSearch += 'username=' + (prompt('What is your name?') || 'anonymous');
         window.location.search = newSearch;
       }
+      console.log(window);
     </script>
     <!-- your scripts -->
-    <script src="env/config.js"></script>
+    <script src="/Users/marinacerame/documents/gitimmersion/opspark/sprints/ChatterboxClient/client/env/config.example.js"></script>
     <script src="scripts/app.js"></script>
   </head>
   <body>
