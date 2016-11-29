@@ -10,15 +10,18 @@ app.friends = [];
 
 app.init = () => {
   console.log('init called');
-  $('.username').on('click', function() {
+  $('.username').unbind('click').bind('click', function() {
     app.handleUsernameClick();
   });
-  $('#send').submit(function(event) {
+
+  $('.submit').unbind('submit').bind('submit', function(event) {
+    console.log('submit triggered');
     app.handleSubmit($('#message').val());
     $('#message').val('');
+    console.log('new message~');
     event.preventDefault();
+    return false;
   });
-  console.log('things');
 };
 
 
@@ -49,14 +52,21 @@ app.clearMessages = () => {
 };
 
 app.renderMessage = (message) => {
+  let $newMessage = $('<div>');
+  $newMessage.appendTo($('#chats'));
+
   var $username = $('<div>')
     .text(message.username)
     .addClass('username')
     .attr('fromUser', message.username);
-  $username.appendTo($('#chats'));
+  $username.appendTo($newMessage);
   var $message = $('<div>').text(message.text);
-  $message.appendTo($('#chats'));
-  app.init();
+  $message.appendTo($newMessage);
+
+  $('.username').on('click', function() {
+    console.log(this);
+    app.handleUsernameClick(this);
+  });
 
 };
 
@@ -65,8 +75,9 @@ app.renderRoom = (room) => {
   $room.appendTo($('#roomSelect'));
 };
 
-app.handleUsernameClick = () => {
-  var friend = $('.username').text();
+app.handleUsernameClick = (div) => {
+  var friend = $(div).text();
+  console.log($(div));
 
   if (!_.contains(app.friends, friend)) {
     app.friends.push(friend);
@@ -75,6 +86,7 @@ app.handleUsernameClick = () => {
 };
 
 app.handleSubmit = (message) => {
+  console.log('message', message);
   let newPost = {
     username: app.username,
     text: message,
@@ -82,4 +94,10 @@ app.handleSubmit = (message) => {
   };
   app.send(newPost);
   app.renderMessage(newPost);
+};
+
+
+app.toggleRooms = function() {
+  console.log('thing');
+  document.getElementById('roomList').classList.toggle('show');
 };
