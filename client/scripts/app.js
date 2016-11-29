@@ -6,11 +6,18 @@ $(document).ready(function () {
 var app = {};
 
 app.username = window.location.search.split('=')[1];
+app.friends = [];
 
 app.init = () => {
   console.log('init called');
-  $('.username').on('click', app.handleUsernameClick);
-  $('#send .submit').on('submit', app.handleSubmit);
+  $('.username').on('click', function() {
+    app.handleUsernameClick();
+  });
+  $('#send').submit(function(event) {
+    app.handleSubmit($('#message').val());
+    $('#message').val('');
+    event.preventDefault();
+  });
   console.log('things');
 };
 
@@ -42,10 +49,15 @@ app.clearMessages = () => {
 };
 
 app.renderMessage = (message) => {
+  var $username = $('<div>')
+    .text(message.username)
+    .addClass('username')
+    .attr('fromUser', message.username);
+  $username.appendTo($('#chats'));
   var $message = $('<div>').text(message.text);
   $message.appendTo($('#chats'));
-  var $username = $('<span>').text(message.username).addClass('username');
-  $username.appendTo($message);
+  app.init();
+
 };
 
 app.renderRoom = (room) => {
@@ -54,9 +66,19 @@ app.renderRoom = (room) => {
 };
 
 app.handleUsernameClick = () => {
-  console.log('hi');
+  var friend = $('.username').text();
+
+  if (!_.contains(app.friends, friend)) {
+    app.friends.push(friend);
+  }
+  console.log(app.friends);
 };
 
 app.handleSubmit = (message) => {
-
+  let newPost = {
+    username: app.username,
+    text: message,
+    roomName: null
+  };
+  app.renderMessage(newPost);
 };
