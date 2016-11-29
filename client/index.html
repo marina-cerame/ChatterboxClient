@@ -31,10 +31,10 @@
       <div class='dropdown' >
         <button onclick='app.toggleRooms()' class='dropbtn'>Rooms</button>
         <div id='roomList' class='dropdown-content'>
-          <a href='#'>lobby</a>
+          <a href='#' onclick='app.renderRoom("lobby")'>lobby</a>
         </div>
       </div>
-      <div class='addRoom'>
+      <div class='addRoom' id='roomSelect'>
         <button onclick='app.addRoom()'>
           add room
         </button>

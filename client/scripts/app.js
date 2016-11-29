@@ -6,9 +6,9 @@ $(document).ready(function () {
 });
 
 var app = {};
-
-app.username = window.location.search.split('=')[1];
 app.friends = [];
+app.username = window.location.search.split('=')[1];
+app.room = 'lobby';
 
 app.escapeHtml = function (string) {
   var entityMap = {
@@ -74,8 +74,7 @@ app.clearMessages = () => {
 
 app.renderMessage = (message) => {
   let $newMessage = $('<div>');
-  $newMessage.prependTo($('#chats'));
-
+  $newMessage.attr('roomName', message.roomName).prependTo($('#chats'));
   var $username = $('<div>')
     .text(message.username)
     .addClass('username')
@@ -85,6 +84,12 @@ app.renderMessage = (message) => {
   var $message = $('<div>').text(message.text);
   $message.appendTo($newMessage);
 
+  app.friends.forEach(function(friend) {
+    $('[username =' + friend + ']').addClass('friend');
+  });
+
+  app.renderRoom(app.room);
+
   $('.username').on('click', function() {
     console.log(this);
     app.handleUsernameClick(this);
@@ -93,8 +98,8 @@ app.renderMessage = (message) => {
 };
 
 app.renderRoom = (room) => {
-  var $room = $('<div>').text(room);
-  $room.appendTo($('#roomSelect'));
+  $('#chats').children().not($('[roomName =' + room + ']')).hide();
+  app.room = room;
 };
 
 app.handleUsernameClick = (div) => {
@@ -105,14 +110,15 @@ app.handleUsernameClick = (div) => {
   if (!_.contains(app.friends, friend)) {
     app.friends.push(friend);
   }
+  console.log(app.friends);
 };
 
 app.handleSubmit = (message) => {
 
   let newPost = {
     username: app.safeUsername,
-    text: app.escapeHtml(message),
-    roomName: null
+    text: message,
+    roomName: app.room
   };
   app.send(newPost);
   app.renderMessage(newPost);
@@ -125,5 +131,7 @@ app.toggleRooms = function() {
 
 app.addRoom = function() {
   var roomName = prompt('What would you like to call your room?');
-  $('.dropdown-content').append($('<a href="#">' + roomName + '</a>'));
+  $('.dropdown-content').append($('<a href="#" onclick=\'app.renderRoom("' + roomName + '")\'>' + roomName + '</a>'));
+  app.room = roomName;
+  app.renderRoom(roomName);
 };
