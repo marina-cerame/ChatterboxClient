@@ -1,6 +1,8 @@
 // YOUR CODE HERE:
 $(document).ready(function () {
   app.init();
+  app.fetch();
+  setInterval(app.fetch, 10000);
 });
 
 var app = {};
@@ -40,10 +42,18 @@ app.send = (message) => {
   });
 };
 
-app.fetch = () => {
+app.fetch = function () {
+  app.clearMessages();
   $.ajax({
-    type: 'GET'
+    url: 'https://api.parse.com/1/classes/messages',
+    type: 'GET',
+    contentType: 'jsonp',
+    success: function(data) {
+      console.log(data);
+      app.renderMessage(data.results.forEach(app.renderMessage));
+    }
   });
+  console.log('hi');
 };
 
 app.clearMessages = () => {
