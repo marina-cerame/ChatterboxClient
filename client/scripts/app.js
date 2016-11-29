@@ -80,5 +80,6 @@ app.handleSubmit = (message) => {
     text: message,
     roomName: null
   };
+  app.send(newPost);
   app.renderMessage(newPost);
 };
