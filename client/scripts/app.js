@@ -15,7 +15,6 @@ app.init = () => {
   });
 
   $('.submit').unbind('submit').bind('submit', function(event) {
-    console.log('submit triggered');
     app.handleSubmit($('#message').val());
     $('#message').val('');
     console.log('new message~');
@@ -58,7 +57,8 @@ app.renderMessage = (message) => {
   var $username = $('<div>')
     .text(message.username)
     .addClass('username')
-    .attr('fromUser', message.username);
+    .addClass(message.username)
+    .attr('username', message.username);
   $username.appendTo($newMessage);
   var $message = $('<div>').text(message.text);
   $message.appendTo($newMessage);
@@ -77,8 +77,9 @@ app.renderRoom = (room) => {
 
 app.handleUsernameClick = (div) => {
   var friend = $(div).text();
-  console.log($(div));
-
+  var $friend = $(div);
+  // $friend.addClass('friend');
+  $('[username =' + friend + ']').addClass('friend');
   if (!_.contains(app.friends, friend)) {
     app.friends.push(friend);
   }
@@ -100,4 +101,10 @@ app.handleSubmit = (message) => {
 app.toggleRooms = function() {
   console.log('thing');
   document.getElementById('roomList').classList.toggle('show');
+};
+
+app.addRoom = function() {
+  var roomName = prompt('What would you like to call your room?');
+  $('.dropdown-content').append($('<a href="#">' + roomName + '</a>'));
+
 };
