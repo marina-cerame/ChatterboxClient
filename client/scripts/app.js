@@ -10,8 +10,21 @@ var app = {};
 app.username = window.location.search.split('=')[1];
 app.friends = [];
 
+app.escapeHtml = function (string) {
+  var entityMap = {
+    // '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    // '"': '&quot;',
+    // '/': '&#x2F;'
+  };
+  return String(string).replace(/[<>]/g, function (s) {
+    return entityMap[s];
+  });
+};
+app.safeUsername = app.escapeHtml(app.username);
+
 app.init = () => {
-  console.log('init called');
   $('.username').unbind('click').bind('click', function() {
     app.handleUsernameClick();
   });
@@ -19,7 +32,6 @@ app.init = () => {
   $('.submit').unbind('submit').bind('submit', function(event) {
     app.handleSubmit($('#message').val());
     $('#message').val('');
-    console.log('new message~');
     event.preventDefault();
     return false;
   });
@@ -49,11 +61,11 @@ app.fetch = function () {
     type: 'GET',
     contentType: 'jsonp',
     success: function(data) {
-      console.log(data);
-      app.renderMessage(data.results.forEach(app.renderMessage));
+      for (let i = data.results.length - 1; i > -1; i--) {
+        app.renderMessage(data.results[i]);
+      }
     }
   });
-  console.log('hi');
 };
 
 app.clearMessages = () => {
@@ -62,7 +74,7 @@ app.clearMessages = () => {
 
 app.renderMessage = (message) => {
   let $newMessage = $('<div>');
-  $newMessage.appendTo($('#chats'));
+  $newMessage.prependTo($('#chats'));
 
   var $username = $('<div>')
     .text(message.username)
@@ -93,14 +105,13 @@ app.handleUsernameClick = (div) => {
   if (!_.contains(app.friends, friend)) {
     app.friends.push(friend);
   }
-  console.log(app.friends);
 };
 
 app.handleSubmit = (message) => {
-  console.log('message', message);
+
   let newPost = {
-    username: app.username,
-    text: message,
+    username: app.safeUsername,
+    text: app.escapeHtml(message),
     roomName: null
   };
   app.send(newPost);
@@ -109,12 +120,10 @@ app.handleSubmit = (message) => {
 
 
 app.toggleRooms = function() {
-  console.log('thing');
   document.getElementById('roomList').classList.toggle('show');
 };
 
 app.addRoom = function() {
   var roomName = prompt('What would you like to call your room?');
   $('.dropdown-content').append($('<a href="#">' + roomName + '</a>'));
-
 };
