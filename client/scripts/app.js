@@ -2,13 +2,14 @@
 $(document).ready(function () {
   app.init();
   app.fetch();
-  setInterval(app.fetch, 10000);
+  setInterval(app.fetch, 5000);
 });
 
 var app = {};
 app.friends = [];
 app.username = window.location.search.split('=')[1];
 app.room = 'lobby';
+app.server = 'https://api.parse.com/1/classes/messages';
 
 app.escapeHtml = function (string) {
   var entityMap = {
@@ -40,7 +41,7 @@ app.init = () => {
 
 app.send = (message) => {
   $.ajax({
-    url: 'https://api.parse.com/1/classes/messages',
+    url: app.server,
     type: 'POST',
     data: JSON.stringify(message),
     contentType: 'application/json',
@@ -57,7 +58,7 @@ app.send = (message) => {
 app.fetch = function () {
   app.clearMessages();
   $.ajax({
-    url: 'https://api.parse.com/1/classes/messages',
+    url: app.server,
     type: 'GET',
     contentType: 'jsonp',
     success: function(data) {
@@ -88,7 +89,7 @@ app.renderMessage = (message) => {
     $('[username =' + friend + ']').addClass('friend');
   });
 
-  app.renderRoom(app.room);
+  app.findRoomPosts(app.room);
 
   $('.username').on('click', function() {
     console.log(this);
@@ -98,6 +99,11 @@ app.renderMessage = (message) => {
 };
 
 app.renderRoom = (room) => {
+  $('#roomSelect').append('<p>' + room + '</p>').hide();
+
+};
+
+app.findRoomPosts = (room) => {
   $('#chats').children().not($('[roomName =' + room + ']')).hide();
   app.room = room;
 };
